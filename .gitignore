@@ -4,3 +4,4 @@ assets/
 error_log
 upload/
 protected/runtime/
+index.php
