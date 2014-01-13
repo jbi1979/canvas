@@ -134,7 +134,11 @@ class RecordController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Record');
+		$dataProvider=new CActiveDataProvider('Record', array(
+					'criteria'=>array(
+						'order'=>'id ASC',
+					))
+		);
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

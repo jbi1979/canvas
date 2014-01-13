@@ -11,8 +11,10 @@ $this->pageTitle=Yii::app()->name;
 
 
 <div class="selected-image">
-	<img src="<?php echo yii::app()->params['uploadUrl'] ?>/<?php echo $model->
-	image ?>" width="300"/>
+	<img src="<?php echo yii::app()->params['uploadUrl'] ?>/<?php echo $model->image ?>" width="300"/>
+</div>
+<div stlye="margin:5px 0;">
+	<h3>Press Record Button!</h3>
 </div>
 <div id="drawingDiv">
 	<form id="record-form" action="<?php echo Yii::app()->createUrl('record/create') ?>" method="post" name="frmCanvas" id="frmCanvas">
@@ -34,9 +36,7 @@ Yii::app()->clientScript->registerScript(
 '$(".selected-image").animate({opacity: 1.0}, 5000).fadeOut("slow");'
 );
 ?>
-
-<div id="serializerDiv" style="display: none;"><textarea id="serDataTxt" cols="80" rows="8"></textarea><br />
-<input id="cancelBtn" type="button" value="Close" /><input id="okBtn" type="submit" value="Submit" /></div>
+<div id="serializerDiv" style="display: none;"><textarea id="serDataTxt" cols="80" rows="8"></textarea></div>
 </form>
 <script>
 /*
@@ -154,6 +154,8 @@ function startScript(canvasId)
 		$('#saveBtn').click(function() {
 			var oForm = $('#frmCanvas'); 
 			
+	
+			
 			var canvas = $('#canvas1')[0]; 
 			var dataURL = canvas.toDataURL('image/png');
 			var resultCanvas = $('#resultCanvas'); 	
@@ -161,6 +163,12 @@ function startScript(canvasId)
 			
 			var serResult = serializeDrawing(drawing);
 			$('#serResult').val(serResult); 
+			
+			if(serResult == '') {
+				alert('Record, Please.'); 
+				return false; 
+			}//end if 
+			
 			oForm.submit(); 
 			
 		});
