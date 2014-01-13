@@ -32,7 +32,7 @@ class RecordController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','view', 'create','update','admin','delete'),
+				'actions'=>array('index','view', 'update','admin','delete'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -82,7 +82,7 @@ class RecordController extends Controller
 			if($success) {
 				$model->attributes=$_POST['Record'];
 				if($model->save())
-					$this->redirect(array('view','id'=>$model->id));
+					$this->redirect(array('site/success'));
 			}//end if 
 		}
 
