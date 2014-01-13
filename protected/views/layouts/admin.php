@@ -25,6 +25,7 @@
 	<div id="mainmenu">
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
+				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Record', 'url'=>array('/record/index')),
 				array('label'=>'Image', 'url'=>array('/image/index')),
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
