@@ -457,7 +457,6 @@ RecordableDrawing = function (canvasId)
 		self.canvas = $("#" + canvasId);
 		if (self.canvas.length == 0)
 		{
-			alert("No canvas with id " + canvasId + " found");
 			return;
 		} 
 		self.canvas = self.canvas.get(0);
@@ -469,11 +468,10 @@ RecordableDrawing = function (canvasId)
 		$(self.canvas).bind("vmouseup", onMouseUp);
 		$(self.canvas).bind("vmousemove", onMouseMove);
 
-		/* 
-		$(self.canvas).bind("mousedown", onMouseDown);
+		/* $(self.canvas).bind("mousedown", onMouseDown);
 		$(self.canvas).bind("mouseup", onMouseUp);
 		$(self.canvas).bind("mousemove", onMouseMove);
-		*/ 
+		*/
 		
 		self.clearCanvas();		
 	}
@@ -853,7 +851,8 @@ function PointWrapper()
 
 PointWrapper.prototype = new ActionWapper();
 </script>
-<script type="text/javascript" src="../../../js/jquery.mobile-1.1.0.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../js/jquery.mobile-1.1.0.js"></script>
 <!-- <script type="text/javascript" src="http://ramkulkarni.com/temp/2013-06-27/js/drawingSerializer.js"></script> -->
 <script type="text/javascript">
 startScript("canvas1");
