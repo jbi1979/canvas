@@ -11,7 +11,7 @@ abstract class CanvasActiveRecord extends CActiveRecord
 		if($this->isNewRecord)
 		{
 			// set the create date, last updated date and the user doing the creating
-			$this->created_at=new CDbExpression('NOW()');
+			$this->created_at=  date('Y-m-d H:i:s',time()); 
 		}
 
 		return parent::beforeValidate();

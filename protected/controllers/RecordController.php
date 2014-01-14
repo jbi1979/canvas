@@ -67,7 +67,7 @@ class RecordController extends Controller
 		{
 			$image_name = uniqid($_POST['Record']['image_id'] . '_');
 			$upload_dir = './upload/canvasResult';
-		
+			
 			if (file_exists($upload_dir)) {
 	    		$img = $_POST['resultCanvas'];
 				$img = str_replace('data:image/png;base64,', '', $img);
