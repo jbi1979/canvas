@@ -4,7 +4,6 @@
 	$image_id = $model->id; 
 
 $this->pageTitle=Yii::app()->name;
-$ismobile = check_user_agent('mobile');
 ?>
 
 <h1>Draw selected image</h1>
@@ -174,6 +173,10 @@ function startScript(canvasId)
 		
 	});
 	
+	$(document).bind('touchmove',function(event){
+		event.preventDefault();
+	},false);
+		
 	function stopRecording()
 	{
 		$("#recordBtn").prop("value","Record");
