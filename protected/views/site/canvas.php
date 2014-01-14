@@ -1,85 +1,10 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-  <head> 
-    <meta charset="utf-8"> 
-	<meta name="viewport" content="width=768px, maximum-scale=1.0" /> 
-    <title>sketchpad</title> 
-	<script type="text/javascript" charset="utf-8"> 
-	window.addEventListener('load',function(){
-		// get the canvas element and its context
-		var canvas = document.getElementById('sketchpad');
-		var context = canvas.getContext('2d');
-		
-		// create a drawer which tracks touch movements
-		var drawer = {
-			isDrawing: false,
-			touchstart: function(coors){
-				context.beginPath();
-				context.moveTo(coors.x, coors.y);
-				this.isDrawing = true;
-			},
-			touchmove: function(coors){
-				if (this.isDrawing) {
-			        context.lineTo(coors.x, coors.y);
-			        context.stroke();
-				}
-			},
-			touchend: function(coors){
-				if (this.isDrawing) {
-			        this.touchmove(coors);
-			        this.isDrawing = false;
-				}
-			}
-		};
-		// create a function to pass touch events and coordinates to drawer
-		function draw(event){
-			// get the touch coordinates
-			var coors = {
-				x: event.targetTouches[0].pageX,
-				y: event.targetTouches[0].pageY
-			};
-			// pass the coordinates to the appropriate handler
-			drawer[event.type](coors);
-		}
-		
-		// attach the touchstart, touchmove, touchend event listeners.
-	    canvas.addEventListener('touchstart',draw, false);
-	    canvas.addEventListener('touchmove',draw, false);
-	    canvas.addEventListener('touchend',draw, false);
-		
-		// prevent elastic scrolling
-		document.body.addEventListener('touchmove',function(event){
-			event.preventDefault();
-		},false);	// end body.onTouchMove
-		
-	},false);	// end window.onLoad
-	</script> 
-    <style type="text/css"><!--
-		body{margin:0;padding:0; font-family:Arial;}
-		#container{position:relative;}
-		#sketchpad{ border: 1px solid #000;}		
-    --></style> 
-  </head> 
-  <body> 
-	<div id="container"> 
-      <canvas id="sketchpad" width="766" height="944"> 
-        Sorry, your browser is not supported.
-      </canvas>		
-	</div> 
-  </body> 
-</html>
-
-
-<?php exit; 
+<?php
 /* @var $this SiteController */
 	$date  = date('Y-m-d H:i:s'); 
 	$image_id = $model->id; 
 
 $this->pageTitle=Yii::app()->name;
 
-//mobile Check 
-echo $ismobile = check_user_agent('mobile');
- 
 ?>
 
 <h1>Draw selected image</h1>
@@ -929,36 +854,3 @@ PointWrapper.prototype = new ActionWapper();
 <script type="text/javascript">
 startScript("canvas1");
 </script>
-
-<?php 
-/* USER-AGENTS
-================================================== */
-function check_user_agent ( $type = NULL ) {
-        $user_agent = strtolower ( $_SERVER['HTTP_USER_AGENT'] );
-        if ( $type == 'bot' ) {
-                // matches popular bots
-                if ( preg_match ( "/googlebot|adsbot|yahooseeker|yahoobot|msnbot|watchmouse|pingdom\.com|feedfetcher-google/", $user_agent ) ) {
-                        return true;
-                        // watchmouse|pingdom\.com are "uptime services"
-                }
-        } else if ( $type == 'browser' ) {
-                // matches core browser types
-                if ( preg_match ( "/mozilla\/|opera\//", $user_agent ) ) {
-                        return true;
-                }
-        } else if ( $type == 'mobile' ) {
-                // matches popular mobile devices that have small screens and/or touch inputs
-                // mobile devices have regional trends; some of these will have varying popularity in Europe, Asia, and America
-                // detailed demographics are unknown, and South America, the Pacific Islands, and Africa trends might not be represented, here
-                if ( preg_match ( "/phone|iphone|itouch|ipod|symbian|android|htc_|htc-|palmos|blackberry|opera mini|iemobile|windows ce|nokia|fennec|hiptop|kindle|mot |mot-|webos\/|samsung|sonyericsson|^sie-|nintendo/", $user_agent ) ) {
-                        // these are the most common
-                        return true;
-                } else if ( preg_match ( "/mobile|pda;|avantgo|eudoraweb|minimo|netfront|brew|teleca|lg;|lge |wap;| wap /", $user_agent ) ) {
-                        // these are less common, and might not be worth checking
-                        return true;
-                }
-        }
-        return false;
-}
-
-?>
