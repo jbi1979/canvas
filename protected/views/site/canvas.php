@@ -9,35 +9,43 @@ $this->pageTitle=Yii::app()->name;
 
 <h1>Draw selected image</h1>
 
+<div class="content_body">
+	<div stlye="margin:5px 0;">
+		<h3>Press Record Button!</h3>
+	</div>
+	<div id="drawing">
+		<form id="record-form" action="<?php echo Yii::app()->createUrl('record/create') ?>" method="post" name="frmCanvas" id="frmCanvas">
+		<div class="draw_area">
+			<div class="selected-image">
+				<img src="<?php echo yii::app()->params['uploadUrl'] ?>/<?php echo $model->image ?>" width="300"/>
+			</div>
+			<div class="canvas"  id="canvas">
+				<canvas width="500" style="border: medium; border-color: #00F; border-style: solid;" id="canvas1" height="400"></canvas>
+			</div>
+		</div>
+		<div stlye="margin:5px 0;"></div>
+		<input type="hidden" name="Record[record_info]" id="serResult" value="" />
+		<input type="hidden" name="resultCanvas" id="resultCanvas" value="" />
+		<input type="hidden" name="Record[resultPath]" id="resultPath" value="" />
+		<input name="Record[created_at]" id="Record_created_at" type="hidden" value="<?php echo $date;?>" />
+		<input size="10" maxlength="10" name="Record[image_id]" id="Record_image_id" type="hidden" value="<?php echo $image_id;?>"/>
+		<label>Name : </label>
+		<input size="60" maxlength="60" name="Record[name]" id="Record_name" type="text" value="" style="margin:5px 0;"/>	<br />
+		<input type="button" value="Record" id="recordBtn"><input type="button" value="Play" id="playBtn"><input type="button" value="Pause" id="pauseBtn" style="display: none;"><br />
+		<input type="button" value="Clear" id="clearBtn"><input id="saveBtn" type="submit" value="Save" />
+		<div id="serializerDiv" style="display: none;"><textarea id="serDataTxt" cols="80" rows="8"></textarea></div>
+		</form>
+	</div>
 
-<div class="selected-image">
-	<img src="<?php echo yii::app()->params['uploadUrl'] ?>/<?php echo $model->image ?>" width="300"/>
 </div>
-<div stlye="margin:5px 0;">
-	<h3>Press Record Button!</h3>
-</div>
-<div id="drawingDiv">
-	<form id="record-form" action="<?php echo Yii::app()->createUrl('record/create') ?>" method="post" name="frmCanvas" id="frmCanvas">
-	<canvas width="500" style="border: medium; border-color: #00F; border-style: solid;" id="canvas1" height="400"></canvas>
-	<div stlye="margin:5px 0;"></div>
-	<input type="hidden" name="Record[record_info]" id="serResult" value="" />
-	<input type="hidden" name="resultCanvas" id="resultCanvas" value="" />
-	<input type="hidden" name="Record[resultPath]" id="resultPath" value="" />
-	<input name="Record[created_at]" id="Record_created_at" type="hidden" value="<?php echo $date;?>" />
-	<input size="10" maxlength="10" name="Record[image_id]" id="Record_image_id" type="hidden" value="<?php echo $image_id;?>"/>
-	<label>Name : </label>
-	<input size="60" maxlength="60" name="Record[name]" id="Record_name" type="text" value="" style="margin:5px 0;"/>	<br />
-	<input type="button" value="Record" id="recordBtn"><input type="button" value="Play" id="playBtn"><input type="button" value="Pause" id="pauseBtn" style="display: none;"><br />
-	<input type="button" value="Clear" id="clearBtn"><input id="saveBtn" type="submit" value="Save" />
-</div>
+
 <?php 
 Yii::app()->clientScript->registerScript(
 'fadeAndHideEffect',
 '$(".selected-image").animate({opacity: 1.0}, 5000).fadeOut("slow");'
 );
 ?>
-<div id="serializerDiv" style="display: none;"><textarea id="serDataTxt" cols="80" rows="8"></textarea></div>
-</form>
+
 <script>
 /*
 * @author : Ram Kulkarni (http://ramkulkarni.com)
@@ -50,16 +58,21 @@ function startScript(canvasId)
 	$(document).bind("ready", function()
 	{
 		$("#pauseBtn").hide();
+		$('#saveBtn').hide(); 
 		//$("#playBtn").hide();
 		
 		drawing = new RecordableDrawing(canvasId);
 		
 		$("#recordBtn").click(function(){
+
 			var btnTxt = $("#recordBtn").prop("value");
-			if (btnTxt == 'Stop')
+			if (btnTxt == 'Stop') {
 				stopRecording();
-			else
+			} else {
+				drawing.clearCanvas();		
+				$('#saveBtn').show(); 
 				startRecording();
+			}//end if 
 		});
 		
 		$("#playBtn").click(playRecordings);
@@ -153,9 +166,6 @@ function startScript(canvasId)
 		
 		$('#saveBtn').click(function() {
 			var oForm = $('#frmCanvas'); 
-			
-	
-			
 			var canvas = $('#canvas1')[0]; 
 			var dataURL = canvas.toDataURL('image/png');
 			var resultCanvas = $('#resultCanvas'); 	

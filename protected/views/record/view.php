@@ -178,6 +178,8 @@ RecordableDrawing = function (canvasId)
 	var currentLineWidth = 5;
 	var drawingColor = "rgb(0,0,0)";
 	var pauseInfo = null;
+	var beforeX = 0; 
+	var beforeY = 0; 
 	
 	onMouseDown = function(event)
 	{
@@ -189,7 +191,7 @@ RecordableDrawing = function (canvasId)
 		var y = Math.floor(event.pageY - canvasY);
 		
 		var	currAction = new Point(x,y,0);
-		self.drawAction(currAction,true);
+		self.drawAction(currAction,true, '#000');
 		if (self.currentRecording != null)
 			self.currentRecording.addAction(currAction);
 		event.preventDefault();
@@ -209,7 +211,7 @@ RecordableDrawing = function (canvasId)
 			var action = new Point(x,y,1);
 			if (self.currentRecording != null)
 				self.currentRecording.addAction(action);
-			self.drawAction(action, true);
+			self.drawAction(action, true, '#000');
 				
 			event.preventDefault();
 			self.lastMouseX = x;
@@ -346,22 +348,30 @@ RecordableDrawing = function (canvasId)
 		self.currentRecording = null;
 	}
 	
-	this.drawAction = function (actionArg, addToArray)
+	this.drawAction = function (actionArg, addToArray, strokeColor)
 	{
 		var x = actionArg.x;
 		var y = actionArg.y;
-		
+
 		switch (actionArg.type)
 		{
 		case 0: //moveto
 			self.ctx.beginPath();
 			self.ctx.moveTo(x, y);
-			self.ctx.strokeStyle = self.drawingColor;
+			self.ctx.strokeStyle = strokeColor;
 			self.ctx.lineWidth = self.currentLineWidth;			
+			self.ctx.stroke();
+			beforeX= x; 
+			beforeY = y;
 			break;
 		case 1: //lineto
+			self.ctx.beginPath();		
+			self.ctx.moveTo(beforeX, beforeY);
+			self.ctx.strokeStyle = strokeColor;
 			self.ctx.lineTo(x,y);
 			self.ctx.stroke();
+			beforeX= x; 
+			beforeY = y;
 			break;
 		}
 		if (addToArray)
@@ -471,12 +481,21 @@ Recording = function (drawingArg)
 				onPlayEnd();
 			return;
 		}	
-
 		self.scheduleDraw(self.actionsSet,self.actionsSet.interval,callbackFunctionArg, onPlayEnd, onPause, true, interruptActionStatus);
 	}
 
 	this.scheduleDraw = function (actionSetArg, interval, callbackFunctionArg, onPlayEnd, onPause, isFirst, interruptActionStatus)
 	{
+		var changeTime = self.totalInterval/3; 
+		var strokeColor = ''; 
+		if(actionSetArg.interval < changeTime) {
+			strokeColor ="rgb(0,0,0)";
+		} else if (actionSetArg.interval < changeTime * 2) {
+			strokeColor ="rgb(255,0,0)";
+		} else {
+			strokeColor ="rgb(0,0,255)";
+		}//end if 
+		
 		window.setTimeout(function(){
 			var status = "";
 			if (interruptActionStatus != null)
@@ -516,7 +535,7 @@ Recording = function (drawingArg)
 			if (intervalDiff >= 0)
 				self.scheduleDraw(actionSetArg.next, intervalDiff, callbackFunctionArg, onPlayEnd, onPause, false,interruptActionStatus);
 
-			self.drawActions(actionSetArg.actions, onPlayEnd, isFirst, isLast);
+			self.drawActions(actionSetArg.actions, onPlayEnd, isFirst, isLast, strokeColor);
 		},interval);
 	}
 	
@@ -535,10 +554,10 @@ Recording = function (drawingArg)
 		self.pauseInfo = null;
 	}	
 	
-	this.drawActions = function (actionArray, onPlayEnd, isFirst, isLast)
+	this.drawActions = function (actionArray, onPlayEnd, isFirst, isLast, strokeColor)
 	{
 		for (var i = 0; i < actionArray.length; i++)
-			self.drawing.drawAction(actionArray[i],false);
+			self.drawing.drawAction(actionArray[i],false, strokeColor);
 			
 		if (isLast)
 		{
@@ -684,6 +703,8 @@ function deserializeRecording(recordingWrp)
 	var rec = new Recording();
 	
 	var prevActionSet = null;
+	rec.totalInterval = recordingWrp.totalInterval ; 
+	
 	for (var i = 0; i < recordingWrp.actionsets.length; i++)
 	{
 		var actionSet = deserializeActionSet(recordingWrp.actionsets[i]);
@@ -747,6 +768,7 @@ function ActionSetWrapper()
 	var self = this;
 	this.actions = new Array();
 	this.interval = 0;
+	this.totalInterval = 0; 
 }
 
 function ActionWapper()
@@ -766,7 +788,6 @@ function PointWrapper()
 
 PointWrapper.prototype = new ActionWapper();
 </script>
-<!-- <script type="text/javascript" src="http://ramkulkarni.com/temp/2013-06-27/js/drawingSerializer.js"></script> -->
 <script type="text/javascript">
 startScript("canvas1");
 

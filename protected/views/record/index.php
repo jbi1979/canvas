@@ -16,6 +16,7 @@ $this->menu=array(
 
 <table border="0" cellpadding="5" cellspacing="1">
 	<tr>
+		<td></td>
 		<td>ID</td>
 		<td>Name</td>
 		<td>Image</td>

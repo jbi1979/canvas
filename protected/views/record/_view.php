@@ -3,6 +3,7 @@
 /* @var $data Record */
 ?>
 <tr>
+	<td><?php echo $index+1;?></td>
 	<td><?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?></td>
 	<td><?php echo CHtml::encode($data->name); ?></td>
 	<td><img src="<?php echo Yii::app()->params['uploadUrl'] ?>/<?php echo $image_path = Image::model()->findbyPk($data->image_id)->image; ?>" alt="" width="150" /></td>

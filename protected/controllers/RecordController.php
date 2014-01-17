@@ -62,9 +62,20 @@ class RecordController extends Controller
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
 		if(isset($_POST['Record']))
 		{
+			$serResult = stripcslashes($_POST['Record']['record_info']);  
+			$aActionSets = json_decode($serResult, true);
+			$aActions = $aActionSets[0][actionsets]; 
+			foreach($aActions as $nKey => $aActionRow) {			
+				$nTotalMinute = $aActionRow['interval']; 
+			}//end foreach 
+			
+			$aActionSets[0]['totalInterval'] = $nTotalMinute; 
+	
+			$aActionResult = json_encode($aActionSets); 
+			$_POST['Record']['record_info'] = $aActionResult; 
+
 			$image_name = uniqid($_POST['Record']['image_id'] . '_');
 			$upload_dir = './upload/canvasResult';
 			
@@ -136,7 +147,7 @@ class RecordController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('Record', array(
 					'criteria'=>array(
-						'order'=>'id ASC',
+						'order'=>'id DESC',
 					))
 		);
 		$this->render('index',array(
